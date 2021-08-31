@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="images">
+    <file>resources/images/penguin1.jpg</file>
+    <file>resources/images/penguin2.jpg</file>
+    <file>resources/images/penguin3.jpg</file>
+    <file>resources/images/shufflewhite.png</file>
+    <file>resources/images/deepfield.jpg</file>
+    <file>resources/images/loop.png</file>
+    <file>resources/images/loopone.png</file>
+    <file>resources/images/next.png</file>
+    <file>resources/images/play_pause.png</file>
+    <file>resources/images/previous.png</file>
+    <file>resources/images/shuffle.png</file>
+  </qresource>
+  <qresource prefix="fonts">
+    <file>resources/fonts/tngan.ttf</file>
+    <file>resources/fonts/PfefferMediaeval.otf</file>
+  </qresource>
+</RCC>
