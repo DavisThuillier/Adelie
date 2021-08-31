@@ -2,6 +2,5 @@ AdelieVenv/
 library.db
 generate_resources.bat
 build/
-dist/
 __pycache__
 Adelie.spec
