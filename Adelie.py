@@ -2,7 +2,6 @@ import sys
 import os
 from time import sleep
 from PyQt5 import QtCore, QtGui, QtWidgets, QtSql
-from PyQt5 import uic
 import vlc
 from glob import glob
 import numpy.random as rnd
@@ -179,14 +178,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.volumeDial.valueChanged.connect(lambda: self.mp.audio_set_volume(self.volumeDial.value()) )
 
         # Tengwar
-        tengwarId = QtGui.QFontDatabase.addApplicationFont(":/fonts/resources/fonts/tngan.ttf")
-        tengwarFamily = QtGui.QFontDatabase.applicationFontFamilies(tengwarId)[0]
-        tngani = QtGui.QFont(tengwarFamily, 20)
-        self.labelThuillier.setFont(tngani)
-        self.labelAudio.setFont(tngani)
+        #tengwarId = QtGui.QFontDatabase.addApplicationFont(":/fonts/resources/fonts/tngan.ttf")
+        #tengwarFamily = QtGui.QFontDatabase.applicationFontFamilies(tengwarId)[0]
+        #tngani = QtGui.QFont(tengwarFamily, 20)
+        #self.labelThuillier.setFont(tngani)
+        #self.labelAudio.setFont(tngani)
 
     def getSettings(self):
-        self.settings=QtCore.QSettings('Thuillier Audio', 'Principle')
+        self.settings=QtCore.QSettings('Adelie', 'Principle')
         if self.settings.value('Library Path') != None:
             global libraryPaths
             libraryPaths = self.settings.value('Library Path') # Load from setting
@@ -211,7 +210,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         global playlistPath
         playlistPath = self.preferencesDialog.playlistPathLineEdit.text()
-        if not os.path.isdir(os.path.dirname(playlistPath)):
+        if not os.path.isdir(os.path.dirname(playlistPath)) and playlistPath.strip() != '':
             os.makedirs(playlistPath)
         self.settings.setValue('Playlist Path', playlistPath)
 

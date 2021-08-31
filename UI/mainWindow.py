@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI/ThuillierAudiov2.ui'
+# Form implementation generated from reading ui file 'UI/Adelie.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -77,16 +77,18 @@ class Ui_MainWindow(object):
         self.musicTabs.setObjectName("musicTabs")
         self.albumTab = QtWidgets.QWidget()
         self.albumTab.setAutoFillBackground(False)
-        self.albumTab.setStyleSheet("background-image: url(:/images/resources/images/deepfield.jpg)")
+        self.albumTab.setStyleSheet("background-image: url(:/images/resources/images/antarctica5.jpg)")
         self.albumTab.setObjectName("albumTab")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.albumTab)
+        self.verticalLayout_3.setContentsMargins(0, -1, 0, -1)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.albumListWidget = QtWidgets.QListWidget(self.albumTab)
         font = QtGui.QFont()
         font.setPointSize(30)
         self.albumListWidget.setFont(font)
-        self.albumListWidget.setStyleSheet("\n"
-"color:white")
+        self.albumListWidget.setStyleSheet("background-color: transparent;\n"
+"color:white;\n"
+"background-attachment: fixed;")
         self.albumListWidget.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.albumListWidget.setFrameShadow(QtWidgets.QFrame.Plain)
         self.albumListWidget.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
@@ -314,12 +316,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.labelThuillier = QtWidgets.QLabel(self.sideBar)
+        font = QtGui.QFont()
+        font.setPointSize(30)
+        self.labelThuillier.setFont(font)
         self.labelThuillier.setTextFormat(QtCore.Qt.MarkdownText)
         self.labelThuillier.setObjectName("labelThuillier")
         self.horizontalLayout_2.addWidget(self.labelThuillier)
-        self.labelAudio = QtWidgets.QLabel(self.sideBar)
-        self.labelAudio.setObjectName("labelAudio")
-        self.horizontalLayout_2.addWidget(self.labelAudio)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -424,13 +426,6 @@ class Ui_MainWindow(object):
         self.volumeDial.setWrapping(True)
         self.volumeDial.setObjectName("volumeDial")
         self.gridLayout.addWidget(self.volumeDial, 0, 1, 1, 1)
-        self.searchLineEdit = QtWidgets.QLineEdit(self.sideBar)
-        self.searchLineEdit.setStyleSheet("font:bold")
-        self.searchLineEdit.setFrame(True)
-        self.searchLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.searchLineEdit.setClearButtonEnabled(True)
-        self.searchLineEdit.setObjectName("searchLineEdit")
-        self.gridLayout.addWidget(self.searchLineEdit, 0, 0, 1, 1)
         self.label = QtWidgets.QLabel(self.sideBar)
         self.label.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -438,6 +433,13 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 1, 1, 1, 1)
+        self.searchLineEdit = QtWidgets.QLineEdit(self.sideBar)
+        self.searchLineEdit.setStyleSheet("font:bold")
+        self.searchLineEdit.setFrame(True)
+        self.searchLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.searchLineEdit.setClearButtonEnabled(True)
+        self.searchLineEdit.setObjectName("searchLineEdit")
+        self.gridLayout.addWidget(self.searchLineEdit, 0, 0, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
         self.activeQueueLabel = QtWidgets.QLabel(self.sideBar)
         self.activeQueueLabel.setStyleSheet("margin-left: 2px;\n"
@@ -554,12 +556,11 @@ class Ui_MainWindow(object):
         self.musicTabs.setTabText(self.musicTabs.indexOf(self.ArtistsTab), _translate("MainWindow", "Artists"))
         self.musicTabs.setTabText(self.musicTabs.indexOf(self.playlistTab), _translate("MainWindow", "Playlists"))
         self.musicTabs.setTabText(self.musicTabs.indexOf(self.allSongsTab), _translate("MainWindow", "Songs"))
-        self.labelThuillier.setText(_translate("MainWindow", "3yJj¸`B6F"))
-        self.labelAudio.setText(_translate("MainWindow", " yD2`B~N"))
+        self.labelThuillier.setText(_translate("MainWindow", "Adélie"))
         self.timeElapsed.setText(_translate("MainWindow", "00:00"))
         self.timeRemaining.setText(_translate("MainWindow", "00:00"))
-        self.searchLineEdit.setPlaceholderText(_translate("MainWindow", "Search..."))
         self.label.setText(_translate("MainWindow", "Volume"))
+        self.searchLineEdit.setPlaceholderText(_translate("MainWindow", "Search..."))
         self.activeQueueLabel.setText(_translate("MainWindow", "Queue"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))

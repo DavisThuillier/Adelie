@@ -1,10 +1,12 @@
 <RCC>
   <qresource prefix="images">
+    <file>resources/images/penguin_cartoon.png</file>
     <file>resources/images/penguin1.jpg</file>
     <file>resources/images/penguin2.jpg</file>
     <file>resources/images/penguin3.jpg</file>
     <file>resources/images/shufflewhite.png</file>
     <file>resources/images/deepfield.jpg</file>
+    <file>resources/images/antarctica5.jpg</file>
     <file>resources/images/loop.png</file>
     <file>resources/images/loopone.png</file>
     <file>resources/images/next.png</file>
