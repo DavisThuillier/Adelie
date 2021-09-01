@@ -1,5 +1,4 @@
 # Adélie
-![](UI/resources/images/penguin_cartoon.png)
 ## Overview
 Adélie is a desktop music player written in Python with a UI designed using Qt. This goal of this project is to produce a music player and library management system with a simple UI for individuals with large libraries. The most notable feature of Adélie is the introduction of tabs as an intermediate step between queueing and playlist creation. Playlists in Adélie are permanent objects saved as .m3u files in the users's playlist directory. Tabs are temporary objects: lists of songs that are created and editable during a single session but are not saved when the application is closed. They allow for the user to 
 * build and rearrange lists of songs for a future queue or playlist
@@ -19,3 +18,4 @@ The interface is straightforward and most functionality is provided through the 
 As new features are added, a manual will be provided in future releases for reference. 
 ## Installation
 If you are running 64-bit Windows, the executable for the most recent release can be found under [Dist]. Alternatively, for Mac or Linux users, the application can be assembled as an executable using PyInstaller. Instructions pending.
+<img src="UI/resources/images/penguin_cartoon.png" width="100">
