@@ -49,23 +49,22 @@ class SongItem(QtWidgets.QListWidgetItem):
 class Playlist(QtWidgets.QListWidgetItem):
     def __init__(self, name, filename = "Unknown.m3u"):
         super().__init__(name)
-        self.name = name
-        self.filename = filename
-        #self.setFlags(self.flags() | QtCore.Qt.ItemIsEditable)
+        self.name = name # Name of playlist visible on app
+        self.filename = filename # Constructed name with .m3u extension
 
 class AlbumItem(QtWidgets.QListWidgetItem):
     def __init__(self, albumName = "Untitled", letter = None, albumDir = "Unknown"):
         super().__init__()
         self.albumName = albumName
         self.letter = letter
-        self.albumDir = albumDir
+        self.albumDir = albumDir # Directory of album for storing album art
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setupUi(self)
         self.musicTabs.setCurrentIndex(0) # Start user at album grid
-        self.penguins = [":/images/resources/images/penguin{}.jpg".format(x) for x in range(1,4)] # Placeholder penguins
+        self.penguins = [":/images/resources/images/penguin{}.jpg".format(x) for x in range(1,4)] # Placeholder penguins for when album art is missing
         self.getSettings()
 
         self.preferencesDialog = Preferences()
@@ -239,7 +238,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.loadLibraryFromDatabase() 
 
     def createSongView(self):
-
         self.songViewModel = QtSql.QSqlQueryModel()
         self.songViewModel.removeColumns(0,2)
         self.songViewModel.setQuery("SELECT * FROM songs ORDER BY Album, DiscAndTrack")
