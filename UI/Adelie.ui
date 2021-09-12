@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>2165</width>
-    <height>1036</height>
+    <height>1054</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Thuillier Audio</string>
+   <string>Adélie</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -1015,6 +1015,12 @@ font-weight: bold;</string>
           <property name="styleSheet">
            <string notr="true">background-color: #415466;
 color: white</string>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
+          </property>
+          <property name="defaultDropAction">
+           <enum>Qt::MoveAction</enum>
           </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::ExtendedSelection</enum>

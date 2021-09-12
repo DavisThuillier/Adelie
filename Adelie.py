@@ -2,6 +2,7 @@ import sys
 import os
 from time import sleep
 from PyQt5 import QtCore, QtGui, QtWidgets, QtSql
+from music_tag import file
 import vlc
 from glob import glob
 import numpy.random as rnd
@@ -141,6 +142,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.artistDiscographyListWidget.itemDoubleClicked.connect(lambda e: self.loadAlbum(item = e, subsetType = "Artist", subset = self.artistTabArtistLabel.text(),toQueue=True))
         self.genreDiscographyListWidget.itemClicked.connect(lambda e: self.loadAlbum(item = e, subsetType = "Genre", subset = self.genreTabGenreLabel.text()))
         self.genreDiscographyListWidget.itemDoubleClicked.connect(lambda e: self.loadAlbum(item = e, subsetType = "Genre", subset = self.genreTabGenreLabel.text(), toQueue = True))
+        
+        self.artistTabArtistLabel.mousePressEvent = self.onSubsetLabelClicked
+        #self.artistTabArtistLabel.doubleClicked.connect(self.onSubsetLabelDoubleClicked)
+        self.genreTabGenreLabel.mousePressEvent = lambda e: self.onSubsetLabelClicked(event = e, label = "Genre")
+        #self.genreTabGenreLabel.doubleClicked.connect(lambda: self.onSubsetLabelDoubleClicked(label = "Genre"))
 
         self.musicTabs.tabCloseRequested.connect(lambda index: self.musicTabs.removeTab(index)) # Make tabs closable
         for i in range(6): # Make required tabs not closable
@@ -148,9 +154,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.activeQueue.itemDoubleClicked.connect(self.setMediaAndPlay)
         self.searchLineEdit.returnPressed.connect(lambda: self.search(self.searchLineEdit.text()))
-        
-        self.albumArtistTabAlbumArtistLabel.mousePressEvent = self.albumArtistTabAlbumArtistLabelClick
-        self.artistTabArtistLabel.mousePressEvent = self.artistTabArtistLabelClick
 
         self.genreList.itemClicked.connect(self.onGenreClicked)
         self.genreList.itemDoubleClicked.connect(self.onGenreDoubleClicked)
@@ -176,12 +179,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.audioScroll.setTracking(True)
         self.volumeDial.valueChanged.connect(lambda: self.mp.audio_set_volume(self.volumeDial.value()) )
 
-        # Tengwar
-        #tengwarId = QtGui.QFontDatabase.addApplicationFont(":/fonts/resources/fonts/tngan.ttf")
-        #tengwarFamily = QtGui.QFontDatabase.applicationFontFamilies(tengwarId)[0]
-        #tngani = QtGui.QFont(tengwarFamily, 20)
-        #self.labelThuillier.setFont(tngani)
-        #self.labelAudio.setFont(tngani)
 
     def getSettings(self):
         self.settings=QtCore.QSettings('Adelie', 'Principle')
@@ -189,7 +186,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             global libraryPaths
             libraryPaths = self.settings.value('Library Path') # Load from setting
        
-        if self.settings.value('Playlist Path') != None: # Use default is setting has not been set yet
+        if self.settings.value('Playlist Path') != None: 
             global playlistPath
             playlistPath = self.settings.value('Playlist Path')
 
@@ -371,8 +368,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 if tabIndex > 5:
                     tabContextMenu = self.createTabContextMenu(self.extraTabListWidgets[tabIndex - 6])
                     tabContextMenu.exec(event.globalPos())
-            elif source is self.miniMediaPlayer:
-                print("Success!")
             return True
     
         return super().eventFilter(source, event)
@@ -541,6 +536,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             self.allSongViewModel.index(row,libraryDict['Filename']).data()) 
                             for row in [index.row() for index in self.allSongViewList.selectionModel().selectedRows()] ]
             tabName = "   " # Name of new tab if created
+        elif context == 13:
+            selectedSongs = []
+
         else:
             tabName = "New Tab"
 
@@ -631,6 +629,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 newArtist = dialog.newArtistEdit.text()
                 newAlbum = dialog.newAlbumEdit.text()
                 newGenre = dialog.newGenreEdit.text()
+                newDiscNo = dialog.newDiscNoEdit.text()
                 if newTitle != "":
                     f['title'] = newTitle
                 else:
@@ -647,6 +646,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         f['genre'] = newGenre
                 else:
                     newGenre = f['genre'].value
+                
             
                 updateMetadata = QtSql.QSqlQuery()
                 updateMetadata.exec('''UPDATE songs SET 
@@ -664,6 +664,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             sameArtist = True
             sameAlbumArtist = True 
             sameAlbum = True 
+            sameDiscNo = True
             firstSong = music_tag.load_file(args[0].filename)
             for arg in args:
                 f = music_tag.load_file(arg.filename)
@@ -671,6 +672,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 if f['albumartist'].value != firstSong['albumartist'].value: sameAlbumArtist = False
                 if f['album'].value != firstSong['album'].value: sameAlbum = False 
                 if f['genre'].value != firstSong['genre'].value: sameGenre = False  
+                if f['discnumber'].value != firstSong['discnumber'].value: sameDiscNo = False
 
             dialog = EditMetadataDialog()
             if sameArtist:
@@ -689,7 +691,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 dialog.oldGenreLabel.setText(f['genre'].value)
             else:
                 dialog.oldGenreLabel.setText("Mixed")
-            
+            if sameDiscNo:
+                dialog.oldDiscNoLabel.setText(str(f['discnumber'].value))
+            else:
+                dialog.oldDiscNoLabel.setText("Mixed")
 
 
             if dialog.exec():
@@ -697,6 +702,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 newAlbum = dialog.newAlbumEdit.text()
                 newAlbumArtist = dialog.newAlbumArtistEdit.text()
                 newGenre = dialog.newGenreEdit.text()
+                newDiscNo = dialog.newDiscNoEdit.text()
                 for arg in args:
                     filename = arg.filename
                     f = music_tag.load_file(filename)
@@ -717,15 +723,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         f['genre'] = newGenre
                     else:
                         newGenre = f['genre'].value
+                    if newDiscNo != "":
+                        newDiscNo = int(newDiscNo)
+                        f['discnumber'] = newDiscNo
+                    else:
+                        newDiscNo = f['discnumber'].value
+
+                    newDiscAndTrack = f"{newDiscNo:02d}-{f['tracknumber'].value:02d}"
                 
                     updateMetadata = QtSql.QSqlQuery()
                     updateMetadata.exec('''UPDATE songs SET 
+                                    DiscAndTrack = "{}",
                                     Artist = "{}",
                                     Album = "{}",
                                     AlbumArtist = "{}",
                                     Genre = "{}"
                                     WHERE Filename = "{}"
-                                    '''.format(newArtist, newAlbum, newAlbumArtist, newGenre, filename))
+                                    '''.format(newDiscAndTrack, newArtist, newAlbum, newAlbumArtist, newGenre, filename))
                     f.save()
 
         if len(self.albumArtistList.selectedItems() ) > 0:
@@ -1064,6 +1078,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.shuffleButton.click()
         self.playNextSong() # Gives random song instead of first song in queue
 
+    def onSubsetLabelClicked(self, event, label = "Artist"):
+        source = self.artistTabArtistLabel
+        if label == "AlbumArtist":
+            source = self.albumArtistTabAlbumArtistLabel
+        elif label == "Genre":
+            source = self.genreTabGenreLabel
+        
+        self.songViewLabel.setText(source.text())
+        self.songViewModel.setQuery('SELECT * FROM songs WHERE {}="{}"'.format(label, source.text()))
+        self.songViewList.hideColumn(1)
+        self.songViewState = 2
+    
+    def onSubsetLabelDoubleClicked(self, label = "Artist"):
+        self.onSubsetLabelClicked(label)
+        self.loadQueueFromSongViewAndPlay()
+            
+
     #######################
     #### Album Methods ####
     #######################
@@ -1118,7 +1149,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             picList = glob(albumDir + "/cover*") + glob(albumDir + "/AlbumArt*")
             albumArt = picList[0]
         except:
-            
             albumArt = rnd.choice(self.penguins)
         if letter == None:
             albumItem.albumArt = albumArt
@@ -1167,7 +1197,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if not toQueue:
                 self.songViewState = 0
                 if letter == '#':
-                    self.songViewModel.setQuery('SELECT * FROM songs WHERE Album LIKE "{}%" ORDER BY Album, DiscAndTrack'.format(letter))
+                    self.songViewModel.setQuery('SELECT * FROM songs WHERE Album LIKE "1%" OR Album LIKE "2%" OR Album LIKE "3%" ORDER BY Album, DiscAndTrack')
                 else:
                     self.songViewModel.setQuery('SELECT * FROM songs WHERE Album LIKE "{}%" ORDER BY Album, DiscAndTrack'.format(letter))
                 self.songViewLabel.setText("Albums Beginning With {}".format(letter))
@@ -1351,10 +1381,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         item = QtWidgets.QListWidgetItem(artist)
         self.artistList.addItem(item)
 
-    def artistTabArtistLabelClick(self, event):
-        self.songViewModel.setQuery('SELECT * FROM songs WHERE Artist="{}"'.format(self.artistTabArtistLabel.text()))
-        self.songViewLabel.setText(self.artistTabArtistLabel.text())
-
     ##############################
     #### Album Artist Methods ####
     ##############################
@@ -1377,10 +1403,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def addAlbumArtistItem(self, albumArtist):
         item = QtWidgets.QListWidgetItem(albumArtist)
         self.albumArtistList.addItem(item)
-
-    def albumArtistTabAlbumArtistLabelClick(self, event):
-        self.songViewModel.setQuery('SELECT * FROM songs WHERE AlbumArtist="{}"'.format(self.albumArtistTabAlbumArtistLabel.text()))
-        self.songViewLabel.setText(self.albumArtistTabAlbumArtistLabel.text())
 
     #######################
     #### Genre Methods ####
@@ -1594,8 +1616,41 @@ class DatabaseWorker(QtCore.QObject):
         self.query.exec(self.creationMessage) #Ensure that the database and song table exists
 
     def completeUpdate(self):
-        self.query.exec("DELETE From songs")
-        self.addPaths(libraryPaths)
+        #self.query.exec("DELETE From songs")
+        #self.addPaths(libraryPaths)
+        actionQuery = QtSql.QSqlQuery(self.con)
+        self.query.exec("SELECT Filename FROM songs")
+        while (self.query.next()):
+            filename = self.query.value(0)
+            if not os.path.exists(filename):
+                print(filename + " does not exist.")
+                actionQuery.prepare("DELETE FROM songs WHERE Filename = ? ")
+                actionQuery.bindValue(0, filename)
+                actionQuery.exec_()
+
+        for path in libraryPaths:
+                if path != "":
+                    for root, dirs, files in os.walk(path):
+                        for file in files:
+                            if file[-3:] in ["m4a", "mp3"]:
+                                filename = os.path.join(root,file)
+                                try:
+                                    f = music_tag.load_file(filename)
+                                except:
+                                    pass
+                                else:
+                                    actionQuery.exec("SELECT 1 FROM songs where Filename = '{}'".format(filename))
+                                    if not actionQuery.next():
+                                        self.query.prepare("INSERT INTO songs(DiscAndTrack, Title, Album, Artist, Genre, AlbumArtist, Filename)" "VALUES(?,?,?,?,?,?,?)")
+                                        self.query.bindValue(0, f"{f['discnumber'].value:02d}-{f['tracknumber'].value:02d}" )
+                                        self.query.bindValue(1, f['title'].value)
+                                        self.query.bindValue(2, f['album'].value)
+                                        self.query.bindValue(3, f['artist'].value)
+                                        self.query.bindValue(4, f['genre'].value)
+                                        self.query.bindValue(5, f['albumartist'].value)
+                                        self.query.bindValue(6, filename)
+                                        self.query.exec_()
+
         self.finished.emit()
 
     def addNewPaths(self, paths):

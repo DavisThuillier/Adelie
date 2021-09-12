@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(2165, 1036)
+        MainWindow.resize(2165, 1054)
         MainWindow.setMinimumSize(QtCore.QSize(0, 0))
         MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
         icon = QtGui.QIcon()
@@ -449,6 +449,8 @@ class Ui_MainWindow(object):
         self.activeQueue = QtWidgets.QListWidget(self.sideBar)
         self.activeQueue.setStyleSheet("background-color: #415466;\n"
 "color: white")
+        self.activeQueue.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.activeQueue.setDefaultDropAction(QtCore.Qt.MoveAction)
         self.activeQueue.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.activeQueue.setObjectName("activeQueue")
         self.verticalLayout_2.addWidget(self.activeQueue)

@@ -4,3 +4,10 @@ generate_resources.bat
 build/
 __pycache__
 Adelie.spec
+docs/AdelieManual.tex
+docs/AdelieManual.fdb_latexmk
+docs/AdelieManual.fls
+docs/AdelieManual.log
+docs/AdelieManual.synctex.gz
+docs/AdelieManual.aux
+docs/AdelieManual.pdf
